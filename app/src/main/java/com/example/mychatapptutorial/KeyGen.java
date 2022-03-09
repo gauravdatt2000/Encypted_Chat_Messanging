@@ -1,0 +1,9 @@
+package com.example.mychatapptutorial;
+
+public class KeyGen {
+
+    public  String generatekey(String  SenderOrReceiverId , Long timestamp ){
+        return SenderOrReceiverId + "@@" + Long.toString(timestamp) ;
+    }
+
+}
