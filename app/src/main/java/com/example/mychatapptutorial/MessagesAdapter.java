@@ -46,15 +46,27 @@ public class MessagesAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         Messages messages=messagesArrayList.get(position);
+        KeyGen key = new KeyGen() ;
+        String ky;
+        EncryptionAndDecryption Enc = new EncryptionAndDecryption() ;
+
         if(holder.getClass()==SenderViewHolder.class)
         {
             SenderViewHolder viewHolder=(SenderViewHolder)holder;
+
+            ky = new String(key.generatekey( messages.getReceiverId() , messages.getTimestamp() ));
+            messages.setMessage(Enc.decrypt(messages.getMessage() , ky));
+
             viewHolder.textViewmessaage.setText(messages.getMessage());
             viewHolder.timeofmessage.setText(messages.getCurrenttime());
         }
         else
         {
             RecieverViewHolder viewHolder=(RecieverViewHolder)holder;
+
+            ky = new String(key.generatekey( messages.getReceiverId() , messages.getTimestamp() ));
+            messages.setMessage(Enc.decrypt(messages.getMessage() , ky));
+
             viewHolder.textViewmessaage.setText(messages.getMessage());
             viewHolder.timeofmessage.setText(messages.getCurrenttime());
         }

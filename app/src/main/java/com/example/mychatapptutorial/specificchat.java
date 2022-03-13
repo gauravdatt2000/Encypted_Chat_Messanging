@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -173,12 +174,26 @@ public class specificchat extends AppCompatActivity {
                 {
                     Date date=new Date();
                     currenttime=simpleDateFormat.format(calendar.getTime());
-                    Messages messages=new Messages(enteredmessage,firebaseAuth.getUid(),date.getTime(),currenttime);
+
+                    //                   added changes
+
+                    KeyGen key = new KeyGen() ;
+                    EncryptionAndDecryption Enc = new EncryptionAndDecryption() ;
+                    String ky;
+                    long time_stamp = date.getTime() ;
+                    ky = new String(key.generatekey( mrecieveruid, time_stamp ));
+
+                    Messages messages1 = new Messages( Enc.getencypted(enteredmessage , ky) ,firebaseAuth.getUid() , mrecieveruid ,time_stamp,currenttime);
+                    Messages messages2 = new Messages( Enc.getencypted(enteredmessage , ky) ,  firebaseAuth.getUid() , mrecieveruid , time_stamp,currenttime);
+
+                    Log.d("mssg trigger" ,  " non_Encrypted mssg ==> " + enteredmessage + " Encrypted mssg ==> " + messages1.getMessage() + " " + messages1.getTimestamp() + " key ==> " + ky ) ;
+                    Log.d("mssg trigger" , "Decrypted mssg => " + Enc.getdecypted(messages1.getMessage() , ky )) ;
+
                     firebaseDatabase=FirebaseDatabase.getInstance();
                     firebaseDatabase.getReference().child("chats")
                             .child(senderroom)
                             .child("messages")
-                            .push().setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            .push().setValue(messages1).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             firebaseDatabase.getReference()
@@ -186,10 +201,10 @@ public class specificchat extends AppCompatActivity {
                                     .child(recieverroom)
                                     .child("messages")
                                     .push()
-                                    .setValue(messages).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    .setValue(messages2).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-
+//                                    Toast.makeText(specificchat.this, "Decypted mssg, " + Enc.getdecypted(messages.getMessage() , ky ) , Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }

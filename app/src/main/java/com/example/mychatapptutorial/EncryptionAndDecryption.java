@@ -61,7 +61,7 @@ public class EncryptionAndDecryption {
         }
         return null;
     }
-    public   String getencypted(String s1 , String key){ return  encrypt(s1 , key) ; }
+    public   String getencypted(String s1 , String key){ return new String( encrypt(s1 , key) )  ; }
 
     public  String decrypt(String strToDecrypt , String key_2)
     {
@@ -103,6 +103,6 @@ public class EncryptionAndDecryption {
         }
         return null;
     }
-    public   String getdecypted(String s1, String key){ return  decrypt(s1, key) ; }
+    public   String getdecypted(String s1, String key){ return  new String( decrypt(s1, key) ) ; }
 
 }
